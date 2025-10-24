@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Coaching KSB Self-Assessment</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Coaching Knowledge, Skills & Behaviours — Self Assessment</h1>
+    <p class="subtitle">Rate yourself 1 (needs development) to 5 (highly confident). Save, load, export, and generate a development plan.</p>
+  </header>
+
+  <main>
+    <section id="controls">
+      <button id="saveBtn">Save progress</button>
+      <button id="loadBtn">Load progress</button>
+      <button id="clearBtn">Clear answers</button>
+      <button id="exportCsvBtn">Export CSV</button>
+      <button id="summaryBtn">Show summary & plan</button>
+    </section>
+
+    <div id="workspace">
+      <aside id="canvasWrap">
+        <canvas id="sceneCanvas"></canvas>
+        <div class="canvas-caption">3D coach model — KSB shapes surround the coach. Click a shape to jump to its item.</div>
+      </aside>
+
+      <section id="assessment"></section>
+    </div>
+
+    <section id="summary" class="hidden">
+      <h2>Summary</h2>
+      <div id="summaryContent"></div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Local app — data stored in your browser only. Designed for quick self-reflection and development planning.</small>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+  <script src="three-scene.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
