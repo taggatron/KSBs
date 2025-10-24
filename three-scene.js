@@ -67,12 +67,12 @@
     const armMat = new THREE_NS.MeshStandardMaterial({color:0x3a6b84, roughness:0.6});
     // left arm
     const upperArmL = new THREE_NS.Mesh(new THREE_NS.CylinderGeometry(0.08,0.09,0.45,12), armMat);
-    upperArmL.position.set(-0.55,0.45,0); upperArmL.rotation.z = 0.35; group.add(upperArmL);
+    upperArmL.position.set(-0.6,0.45,0); upperArmL.rotation.z = 0.35; group.add(upperArmL);
     const lowerArmL = new THREE_NS.Mesh(new THREE_NS.CylinderGeometry(0.07,0.07,0.45,10), armMat);
-    lowerArmL.position.set(-0.9,0.05,0); lowerArmL.rotation.z = 0.9; group.add(lowerArmL);
+    lowerArmL.position.set(-0.4,0.05,0); lowerArmL.rotation.z = 0.9; group.add(lowerArmL);
     // right arm (mirrored)
-    const upperArmR = upperArmL.clone(); upperArmR.position.x = 0.55; upperArmR.rotation.z = -0.35; group.add(upperArmR);
-    const lowerArmR = lowerArmL.clone(); lowerArmR.position.x = 0.9; lowerArmR.rotation.z = -0.9; group.add(lowerArmR);
+    const upperArmR = upperArmL.clone(); upperArmR.position.x = 0.6; upperArmR.rotation.z = -0.35; group.add(upperArmR);
+    const lowerArmR = lowerArmL.clone(); lowerArmR.position.x = 0.4; lowerArmR.rotation.z = -0.9; group.add(lowerArmR);
 
     // legs
     const legMat = new THREE_NS.MeshStandardMaterial({color:0x1f2a38, roughness:0.7});
