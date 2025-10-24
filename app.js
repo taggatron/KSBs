@@ -130,6 +130,122 @@ function escapeCsv(s){
   return '"' + s.replace(/"/g,'""') + '"';
 }
 
+// ---------------- Import helpers ----------------
+function parseCsv(text){
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+  if(lines.length === 0) return [];
+  function parseLine(line){
+    const res = [];
+    let cur = '';
+    let inQuotes = false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(inQuotes){
+        if(ch === '"'){
+          if(line[i+1] === '"'){ cur += '"'; i++; } else { inQuotes = false; }
+        } else { cur += ch; }
+      } else {
+        if(ch === ','){ res.push(cur); cur = ''; }
+        else if(ch === '"'){ inQuotes = true; }
+        else { cur += ch; }
+      }
+    }
+    res.push(cur);
+    return res;
+  }
+  const headers = parseLine(lines[0]).map(h => h.trim());
+  const out = [];
+  for(let i=1;i<lines.length;i++){
+    const row = parseLine(lines[i]);
+    if(row.length === 1 && row[0] === '') continue;
+    const obj = {};
+    for(let j=0;j<headers.length;j++) obj[headers[j]] = row[j] === undefined ? '' : row[j];
+    out.push(obj);
+  }
+  return out;
+}
+
+function applyImportedAnswers(answersMap, save=true){
+  // answersMap: { id: { rating, comment }, ... }
+  Object.keys(answersMap).forEach(id => {
+    const node = document.querySelector(`.item[data-id="${id}"]`);
+    const a = answersMap[id] || {};
+    const rating = parseInt(a.rating,10) || 3;
+    if(node){
+      const slider = node.querySelector('.slider');
+      const val = node.querySelector('.val');
+      const comment = node.querySelector('.comment');
+      if(slider){ slider.value = rating; }
+      if(val){ val.textContent = rating; }
+      if(comment){ comment.value = a.comment || ''; }
+    }
+  });
+  try{ window.ThreeScene && window.ThreeScene.updateAll && window.ThreeScene.updateAll(answersMap); }catch(e){console.warn('ThreeScene updateAll failed on import', e)}
+  if(save){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), answers: answersMap }));
+    alert('Import applied and saved locally.');
+  } else {
+    alert('Import applied (not saved).');
+  }
+}
+
+function handleImportFile(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const txt = String(e.target.result || '');
+    // try JSON first
+    try{
+      const trimmed = txt.trim();
+      if(trimmed.startsWith('{') || trimmed.startsWith('[')){
+        const parsed = JSON.parse(trimmed);
+        let answers = {};
+        if(Array.isArray(parsed)){
+          // array of rows
+          parsed.forEach(r => { if(r.id) answers[r.id] = { rating: r.rating||r.RATING||r.Rating||3, comment: r.comment||r.Comment||'' }; });
+        } else if(parsed.answers){
+          answers = parsed.answers;
+        } else {
+          // maybe it's already a map of id-> {rating,comment}
+          const keys = Object.keys(parsed||{});
+          const looksLikeMap = keys.length && keys.every(k => typeof parsed[k] === 'object' && ('rating' in parsed[k] || 'comment' in parsed[k]));
+          if(looksLikeMap) answers = parsed;
+          else if(parsed.rows && Array.isArray(parsed.rows)){
+            parsed.rows.forEach(r => { if(r.id) answers[r.id] = { rating: r.rating||3, comment: r.comment||'' }; });
+          } else {
+            // fallback: no recognizable structure
+            alert('JSON parsed but contained no recognizable answers structure. Expected {answers:{id:{rating,comment}}} or an array of rows.');
+            return;
+          }
+        }
+        applyImportedAnswers(answers, true);
+        return;
+      }
+    }catch(err){
+      // not JSON or invalid JSON, try CSV below
+      console.warn('JSON parse failed, falling back to CSV parse', err);
+    }
+
+    // CSV fallback
+    try{
+      const rows = parseCsv(txt);
+      const answers = {};
+      rows.forEach(r => {
+        const id = r.id || r.ID || r.Id || r['id '];
+        if(!id) return;
+        const rating = r.rating || r.RATING || r.Rating || r.score || r.Score || 3;
+        const comment = r.comment || r.Comment || '';
+        answers[id] = { rating: parseInt(String(rating).trim(),10) || 3, comment };
+      });
+      if(Object.keys(answers).length === 0){ alert('No rows with an `id` column were found in the CSV.'); return; }
+      applyImportedAnswers(answers, true);
+    }catch(err){
+      alert('Failed to parse import file: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
 function getSavedAnswer(id){
   const raw = localStorage.getItem(STORAGE_KEY);
   if(!raw) return null;
@@ -224,6 +340,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loadBtn').addEventListener('click', loadProgress);
   document.getElementById('clearBtn').addEventListener('click', clearAnswers);
   document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+  const importBtn = document.getElementById('importBtn');
+  const importInput = document.getElementById('importFileInput');
+  if(importBtn && importInput){
+    importBtn.addEventListener('click', () => importInput.click());
+    importInput.addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(f) handleImportFile(f); e.target.value = ''; });
+  }
   document.getElementById('summaryBtn').addEventListener('click', showSummary);
   try{ const raw = localStorage.getItem(STORAGE_KEY); if(raw){ const parsed = JSON.parse(raw); window.ThreeScene && window.ThreeScene.updateAll && window.ThreeScene.updateAll(parsed.answers || {}); } }catch(e){}
 });
