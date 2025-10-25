@@ -67,7 +67,15 @@
   </footer>
 
   <script src="data.js"></script>
-  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+  <!-- Load Three.js and GLTFLoader as ES modules, then expose them on window.THREE for compatibility -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+    // Expose a global THREE so non-module scripts (three-scene.js) can use it.
+    window.THREE = THREE;
+    // Attach the GLTFLoader constructor for compatibility with code expecting THREE.GLTFLoader
+    window.THREE.GLTFLoader = GLTFLoader;
+  </script>
   <script src="three-scene.js"></script>
   <script src="app.js"></script>
 </body>
