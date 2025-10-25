@@ -94,15 +94,18 @@
     scene = new THREE_NS.Scene();
     scene.fog = new THREE_NS.Fog(0x081020, 5, 12);
     camera = new THREE_NS.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-  camera.position.set(0,1.2,4);
+    // start slightly higher, to the right, and zoomed out so the coach is framed comfortably
+    camera.position.set(1.0, 1.6, 5.5);
 
-  // set orbit target (around coach) and initialise spherical coords
-  orbitTarget = new THREE_NS.Vector3(0, -0.1, 0);
-  // compute radius from initial camera
-  radius = camera.position.distanceTo(orbitTarget) || 4;
-  // set sensible starting angles (theta on Y, phi from up)
-  theta = 0; phi = Math.acos((camera.position.y - orbitTarget.y) / radius);
-  updateCameraPosition();
+    // set orbit target (around coach) and initialise spherical coords
+    orbitTarget = new THREE_NS.Vector3(0, -0.15, 0);
+    // compute radius from initial camera
+    radius = camera.position.distanceTo(orbitTarget) || 4;
+    // set sensible starting angles (theta on Y, phi from up)
+    // theta positive moves camera to the right of the target
+    theta = 0.4; 
+    phi = Math.acos((camera.position.y - orbitTarget.y) / radius);
+    updateCameraPosition();
 
     // lights
     const hemi = new THREE_NS.HemisphereLight(0xffffff, 0x444444, 0.6); hemi.position.set(0,20,0); scene.add(hemi);
@@ -159,7 +162,7 @@
                 const s = targetHeight / height;
                 if(isFinite(s) && s > 0 && Math.abs(1 - s) > 0.01){ coach.scale.multiplyScalar(s); }
               }catch(e){}
-              coach.position.y = -0.2;
+              coach.position.y = -0.7;
               scene.add(coach);
             },
             undefined,
