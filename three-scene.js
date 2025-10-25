@@ -135,8 +135,9 @@
 
       function tryLoadGLB(){
         try{
-          if(!THREE_NS.GLTFLoader) return addProceduralFallback('GLTFLoader still not available after attempted load; using procedural coach.');
-          const loader = new THREE_NS.GLTFLoader();
+          if(!(THREE_NS.GLTFLoader || window.GLTFLoader)) return addProceduralFallback('GLTFLoader still not available after attempted load; using procedural coach.');
+          const LoaderCtor = THREE_NS.GLTFLoader || window.GLTFLoader;
+          const loader = new LoaderCtor();
           loader.load(coachUrl,
             (gltf) => {
               const coach = gltf.scene || (gltf.scenes && gltf.scenes[0]);
@@ -169,8 +170,8 @@
         }catch(e){ addProceduralFallback('Error while trying to instantiate GLTFLoader; using procedural coach.', e); }
       }
 
-      // If loader already present, use it straight away
-      if(THREE_NS.GLTFLoader){ tryLoadGLB(); return; }
+  // If loader already present (either attached to THREE or window), use it straight away
+  if(THREE_NS.GLTFLoader || window.GLTFLoader){ tryLoadGLB(); return; }
 
       // Attempt to inject the non-module GLTFLoader (attaches to THREE) from jsDelivr.
       // Note: examples/jsm (ESM) can not be injected via classic script tag; we use the non-module path.

@@ -67,16 +67,26 @@
   </footer>
 
   <script src="data.js"></script>
-  <!-- Load Three.js and GLTFLoader as ES modules, then expose them on window.THREE for compatibility -->
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
-    import { GLTFLoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
-    // Expose a global THREE so non-module scripts (three-scene.js) can use it.
-    window.THREE = THREE;
-    // Attach the GLTFLoader constructor for compatibility with code expecting THREE.GLTFLoader
-    window.THREE.GLTFLoader = GLTFLoader;
-  </script>
-  <script src="three-scene.js"></script>
-  <script src="app.js"></script>
+    <!-- Import map to resolve bare 'three' specifier used by examples/jsm modules in the browser -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.152.2/build/three.module.js"
+        }
+      }
+    </script>
+
+    <!-- Load Three and GLTFLoader as ES modules, then expose them on window.THREE for legacy code -->
+    <script type="module">
+      import * as THREE from 'three';
+      import { GLTFLoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+      // Expose a global THREE so non-module scripts (three-scene.js) can use it.
+      window.THREE = THREE;
+      // Attach the GLTFLoader constructor to window.GLTFLoader so legacy code can access it
+      // (THREE namespace objects are not always extensible in some browsers/runtime builds)
+      window.GLTFLoader = GLTFLoader;
+    </script>
+  <script src="three-scene.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
