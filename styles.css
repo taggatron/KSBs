@@ -73,3 +73,61 @@ footer{padding:16px;text-align:center;color:var(--muted);font-size:13px}
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
+
+/* Custom blue slider styles (cross-browser) */
+.rating input[type="range"]{
+  --track-height: 10px;
+  --track-bg: #dbeeff; /* light blue background */
+  --fill-bg: var(--accent); /* primary blue */
+}
+
+/* WebKit (Chrome, Safari) */
+.rating input[type="range"]::-webkit-slider-runnable-track{
+  height: var(--track-height);
+  background: linear-gradient(90deg, var(--fill-bg) 0%, var(--fill-bg) var(--percent, 50%), var(--track-bg) var(--percent, 50%), var(--track-bg) 100%);
+  border-radius: 999px;
+}
+.rating input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: calc((var(--track-height) - 26px) / 2);
+  background: #1f6feb; /* solid blue thumb */
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(31,111,235,0.25), 0 1px 0 rgba(255,255,255,0.6) inset;
+  border: 4px solid rgba(255,255,255,0.9);
+}
+
+/* Firefox */
+.rating input[type="range"]::-moz-range-track{
+  height: var(--track-height);
+  background: var(--track-bg);
+  border-radius: 999px;
+}
+.rating input[type="range"]::-moz-range-progress{
+  height: var(--track-height);
+  background: var(--fill-bg);
+  border-radius: 999px;
+}
+.rating input[type="range"]::-moz-range-thumb{
+  width: 22px;
+  height: 22px;
+  background: #1f6feb;
+  border: 4px solid rgba(255,255,255,0.9);
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(31,111,235,0.22);
+}
+
+/* IE/Edge Legacy - minimal support */
+.rating input[type="range"]::-ms-track{
+  height: var(--track-height);
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.rating input[type="range"]::-ms-fill-lower{ background: var(--fill-bg); border-radius:999px }
+.rating input[type="range"]::-ms-fill-upper{ background: var(--track-bg); border-radius:999px }
+
+/* JS hook: update custom CSS variable for webkit gradient fill */
+/* This will be set dynamically by the page when sliders change, but provide a default */
+.rating input[type="range"]{ --percent: 50%; }

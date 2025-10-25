@@ -88,5 +88,24 @@
     </script>
   <script src="three-scene.js" defer></script>
   <script src="app.js" defer></script>
+  <script>
+    // Update --percent CSS variable for WebKit gradient fill so the track reflects slider value
+    (function(){
+      function updateRangePercent(el){
+        const val = Number(el.value);
+        const min = Number(el.min || 0);
+        const max = Number(el.max || 100);
+        const pct = Math.round(((val - min) / (max - min)) * 100);
+        el.style.setProperty('--percent', pct + '%');
+      }
+      function init(){
+        document.querySelectorAll('.rating input[type="range"]').forEach(el => {
+          updateRangePercent(el);
+          el.addEventListener('input', ()=> updateRangePercent(el));
+        });
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+    })();
+  </script>
 </body>
 </html>
