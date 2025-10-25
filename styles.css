@@ -8,7 +8,10 @@
 *{box-sizing:border-box}
 body{font-family:Inter,Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:#0f172a}
 header{padding:28px 20px;background:linear-gradient(90deg,#fff,#f8fafc);border-bottom:1px solid #e6eef8}
-header h1{margin:0;font-size:20px}
+.site-title{display:flex;align-items:center;gap:14px;margin:0;font-size:20px;font-weight:700}
+.site-icon{flex:0 0 auto;border-radius:8px}
+.site-icon circle{mix-blend-mode:normal}
+@media(min-width:900px){.site-title{font-size:28px}}
 .subtitle{margin:6px 0 0;color:var(--muted)}
 main{padding:5px;max-width:1200px;margin:5px auto}
 #controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
