@@ -1,5 +1,15 @@
 const STORAGE_KEY = 'ksb_assessment_v1';
 
+function updateRangePercent(el){
+  const val = Number(el.value);
+  const min = Number(el.min || 0);
+  const max = Number(el.max || 100);
+  // Avoid division by zero
+  if(max === min) return;
+  const pct = Math.round(((val - min) / (max - min)) * 100);
+  el.style.setProperty('--percent', pct + '%');
+}
+
 function buildSections(items){
   const groups = { Knowledge: [], Skill: [], Behaviour: [] };
   items.forEach(it => {
@@ -49,8 +59,13 @@ function renderAssessment(){
 
       const slider = itemEl.querySelector('.slider');
       const val = itemEl.querySelector('.val');
+      
+      // Initialize slider fill
+      updateRangePercent(slider);
+
       slider.addEventListener('input', e => {
         val.textContent = e.target.value;
+        updateRangePercent(e.target);
         if(window.ThreeScene && typeof window.ThreeScene.updateShape === 'function'){
           try{ window.ThreeScene.updateShape(item.id, parseInt(e.target.value,10)); }catch(e){}
         }
@@ -90,7 +105,9 @@ function loadProgress(){
       const node = document.querySelector(`.item[data-id="${id}"]`);
       if(node){
         const a = answers[id];
-        node.querySelector('.slider').value = a.rating;
+        const slider = node.querySelector('.slider');
+        slider.value = a.rating;
+        updateRangePercent(slider);
         node.querySelector('.val').textContent = a.rating;
         node.querySelector('.comment').value = a.comment || '';
       }
@@ -104,7 +121,9 @@ function loadProgress(){
 function clearAnswers(){
   if(!confirm('Clear all answers on this page? This will not delete saved local data.')) return;
   document.querySelectorAll('.item').forEach(node => {
-    node.querySelector('.slider').value = 3;
+    const slider = node.querySelector('.slider');
+    slider.value = 3;
+    updateRangePercent(slider);
     node.querySelector('.val').textContent = 3;
     node.querySelector('.comment').value = '';
   });
@@ -175,7 +194,7 @@ function applyImportedAnswers(answersMap, save=true){
       const slider = node.querySelector('.slider');
       const val = node.querySelector('.val');
       const comment = node.querySelector('.comment');
-      if(slider){ slider.value = rating; }
+      if(slider){ slider.value = rating; updateRangePercent(slider); }
       if(val){ val.textContent = rating; }
       if(comment){ comment.value = a.comment || ''; }
     }
