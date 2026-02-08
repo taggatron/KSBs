@@ -278,7 +278,8 @@ function showSummary(){
         li.innerHTML = `<strong>${x.item.id}</strong> ${x.item.title} — current: ${x.rating||'n/a'}<div class="desc">${x.item.description}</div>`;
         const suggestion = generateSuggestion(x.item);
         const sug = document.createElement('div');
-        sug.style.marginTop='6px';
+        sug.className = 'suggestion-box';
+        //sug.style.marginTop='6px'; // handled by CSS
         sug.innerHTML = `<em>Suggested development actions:</em><ol>${suggestion.map(s=>`<li>${s}</li>`).join('')}</ol>`;
         li.appendChild(sug);
         ul.appendChild(li);
@@ -295,8 +296,10 @@ function showSummary(){
 
   // Show full development plan suggestion (aggregate)
   const plan = document.createElement('div');
+  plan.className = 'plan-section';
   plan.innerHTML = `<h3>Suggested development plan (starter)</h3>`;
   const planList = document.createElement('ol');
+  planList.className = 'plan-list';
   // pick top 6 lowest-rated items
   const all = window.KSB_ITEMS.map(it => ({ it, rating: (answers[it.id] && answers[it.id].rating) || 0 })).sort((a,b)=>a.rating - b.rating);
   all.slice(0,6).forEach(x => {

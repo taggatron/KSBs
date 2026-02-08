@@ -223,3 +223,143 @@ footer{padding:16px;text-align:center;color:var(--muted);font-size:13px}
 /* JS hook: update custom CSS variable for webkit gradient fill */
 /* This will be set dynamically by the page when sliders change, but provide a default */
 .rating input[type="range"]{ --percent: 50%; }
+
+/* --- Enhanced Summary & Plan Styles --- */
+
+#summary {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+  margin-top: 24px;
+  border: 1px solid #e6eef8;
+}
+
+#summary h2 {
+  margin-top: 0;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+  color: #1e293b;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+#summaryContent > div {
+  margin-bottom: 32px;
+}
+
+#summaryContent h3 {
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent);
+  font-size: 1.1em;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-weight: 600;
+}
+
+#summaryContent ul, 
+#summaryContent ol.plan-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+/* Base Card Style for List Items */
+/* Target specific list items to avoid cascading issues */
+#summaryContent ul > li, 
+ol.plan-list > li {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+#summaryContent ul > li:hover,
+ol.plan-list > li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+/* ID Tag Styling (matches the bold ID at start) */
+#summaryContent strong {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+/* Description Text */
+#summaryContent .desc {
+  color: #64748b;
+  font-size: 0.95em;
+  margin: 6px 0 12px 0;
+  line-height: 1.5;
+}
+
+/* Suggested Development Actions Block container */
+.suggestion-box {
+  background: #f8fafc;
+  border: 1px solid #e6eef8;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 12px !important;
+}
+
+.suggestion-box em {
+  display: block;
+  font-style: normal;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 0.05em;
+}
+
+/* Inner Action List */
+.suggestion-box ol {
+  counter-reset: actions;
+  padding-left: 0;
+  margin: 0;
+}
+
+/* Reset styles for inner list items so they don't look like cards */
+.suggestion-box ol > li {
+  position: relative;
+  border: none;
+  background: none;
+  box-shadow: none;
+  padding: 0 0 0 24px;
+  margin: 0 0 8px 0;
+  font-size: 0.95em;
+  color: #475569;
+  pointer-events: none; /* remove hover effects */
+  transform: none !important;
+}
+.suggestion-box ol > li:last-child {
+  margin-bottom: 0;
+}
+
+.suggestion-box ol > li::before {
+  counter-increment: actions;
+  content: counter(actions) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9em;
+  width: 20px;
+}
+
+
