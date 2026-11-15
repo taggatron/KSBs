@@ -1,0 +1,24 @@
+# === UK GDPR Zero-PII & Credential Safeguards ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+puppeteer_profile/
+**/puppeteer_profile/
+temp_downloads/
+**/temp_downloads/
+Attendance_dash/data/
+*student_data*
+*learner_data*
+*pastoral_data*
+*pastoral_log*
+*medical_needs*
+*safeguarding_data*
+*ehcp_data*
+*personcode*
+*ebs_export*
+*ilr_export*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

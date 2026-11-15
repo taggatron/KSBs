@@ -1,0 +1,42 @@
+# Prevent all sensitive learner data, PII, extracts, browser profiles, and secrets from entering AI model context
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+!*.example
+!*.sample
+!*.template
+
+# Browser & Authenticator profiles
+puppeteer_profile/
+**/puppeteer_profile/
+db/
+db/**
+scratch/
+scratch/**
+scrapers/
+scrapers/**
+temp_downloads/
+**/temp_downloads/
+
+# UK GDPR Learner, Student, Safeguarding, Medical & Pastoral Data
+Attendance_dash/data/
+**/Attendance_dash/data/
+*student_data*
+*learner_data*
+*pastoral*
+*medical*
+*safeguarding*
+*ehcp*
+*personcode*
+*ebs_export*
+*ilr_export*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.bak
+*.jsonl
